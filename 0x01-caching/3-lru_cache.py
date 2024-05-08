@@ -5,32 +5,35 @@ BaseCaching = __import__('base_caching').BaseCaching
 
 
 class LRUCache(BaseCaching):
-    """ A class LRUCache that inherits from BaseCaching
-    and is a caching system"""
+    """_summary_
+    """
+
     def __init__(self):
-        """ initializing """
+        """_summary_
+        """
         super().__init__()
-        self.access_tracker = []
+        self.usedKeys = []
 
     def put(self, key, item):
-        if key is None or item is None:
-            return
-
-        if len(self.cache_data) >= BaseCaching.MAX_ITEMS:
-            # If cache is full, discard the least recently used item (LRU)
-            lru_key = self.access_tracker.pop(0)
-            del self.cache_data[lru_key]
-            print("DISCARD:", lru_key)
-
-        self.cache_data[key] = item
-        self.access_tracker.append(key)
+        """
+        Add key and value to the cache
+        """
+        if key is not None and item is not None:
+            self.cache_data[key] = item
+            if key not in self.usedKeys:
+                self.usedKeys.append(key)
+            else:
+                self.usedKeys.append(
+                    self.usedKeys.pop(self.usedKeys.index(key)))
+            if len(self.usedKeys) > BaseCaching.MAX_ITEMS:
+                discard = self.usedKeys.pop(0)
+                del self.cache_data[discard]
+                print('DISCARD: {:s}'.format(discard))
 
     def get(self, key):
-        if key is None or key not in self.cache_data:
-            return None
-
-        # Update access_tracker to reflect recent access
-        self.access_tracker.remove(key)
-        self.access_tracker.append(key)
-
-        return self.cache_data[key]
+        """return the value in self.cache_data linked to key
+        """
+        if key is not None and key in self.cache_data.keys():
+            self.usedKeys.append(self.usedKeys.pop(self.usedKeys.index(key)))
+            return self.cache_data.get(key)
+        return None
