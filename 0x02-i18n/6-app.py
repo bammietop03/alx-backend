@@ -44,7 +44,7 @@ def get_locale():
     if locale_param in app.config['LANGUAGES']:
         print(locale_param)
         return locale_param
-    
+
     if g.user:
         locale = g.user.get('locale')
         if locale and locale in app.config['LANGUAGES']:
