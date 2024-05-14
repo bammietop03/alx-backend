@@ -36,7 +36,7 @@ def before_request():
     g.user = get_user(int(user_id)) if user_id else None
 
 
-# @babel.localeselector
+@babel.localeselector
 def get_locale():
     """ Determines the best match with our supported languages"""
     locale_param = request.args.get('locale')
